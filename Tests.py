@@ -24,8 +24,8 @@ class Testcase(unittest.TestCase):
         tracker.clean_db()
         # assert tracker.Entry.select().where(tracker.Entry.name == "allowed_entry") is True
         # assert tracker.Entry.select().where(tracker.Entry.name == "old_entry_1") is False
-        self.assertFalse(tracker.Entry.select().where(tracker.Entry.name == "old_entry_1"))
-        self.assertTrue(tracker.Entry.select().where(tracker.Entry.name == "allowed_entry"))
+        self.assertFalse(tracker.Entry.select().where(tracker.Entry.name == "old_entry_1"), msg="Entry not there")
+        self.assertTrue(tracker.Entry.select().where(tracker.Entry.name == "allowed_entry"), msg="Entry there")
 
 
 class Testcase2(unittest.TestCase):
@@ -38,7 +38,6 @@ class Testcase2(unittest.TestCase):
         for i in tracker.Entry.select():
             i.delete_instance()
 
-
     def testmain(self):
         tracker.main()
         tracker.main()
@@ -46,7 +45,9 @@ class Testcase2(unittest.TestCase):
         q = tracker.Entry.select().order_by(tracker.Entry.id.desc()).where(tracker.Entry.name == "CPU").get()
         print(q.value,cpu_percent(interval=1))
         assert SM(None,str(q.value),str(cpu_percent(interval=1))).ratio() > 0.1
-        self.assertAlmostEqual(SM(None,q))
+        # self.assertAlmostEqual(q.value,cpu_percent(interval=1))
+        # self.assert(SM(None,q.value,cpu_percent(interval=1)).ratio() > 0.1)
+        self.assertGreaterEqual(SM(None, str(12.5), str(cpu_percent(interval=1))).ratio(), 0.1)
 
 if __name__ == '__main__':
     unittest.main()
