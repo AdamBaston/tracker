@@ -1,9 +1,11 @@
 #!/usr/bin/python3 
 from datetime import timedelta, datetime
+from time import sleep
+
 import psutil
 from peewee import *
-from time import sleep
-from tracker import config
+
+import config
 
 
 class Entry(Model):
@@ -17,7 +19,7 @@ class Entry(Model):
 
 # @async
 def main():
-    now = datetime.datetime.utcnow()
+    now = datetime.utcnow()
     try: # for windows DEV purposes because Im lazy
         with open("/sys/class/thermal/thermal_zone0/temp") as f:
             value=str(f.read())
@@ -41,7 +43,7 @@ def main():
 def clean_db():
     now = datetime.utcnow()
     for i in Entry.select():
-        if now-timedelta(hours=config.BACK_LOG) < datetime.strptime(str(i.time), "%Y-%m-%d %H:%M:%S.%f"):
+        if now-timedelta(hours=config.BACK_LOG) > datetime.strptime(str(i.time), "%Y-%m-%d %H:%M:%S.%f"):
             i.delete_instance()
 
 
@@ -50,12 +52,12 @@ def run(sleep_time):
     while True:
         main()
         clean_db()
+        print("Complete dud")
         sleep(sleep_time)
 
 
 if __name__ == "__main__":
     run(config.QUERY_TIME)
-
 
 
 

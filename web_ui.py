@@ -1,9 +1,11 @@
 from datetime import datetime
+
 import pygal
 from flask import Flask, render_template
 from playhouse.shortcuts import model_to_dict
-from tracker.config import DEBUG
-from tracker.tracker import Entry
+
+from config import DEBUG
+from tracker import Entry
 
 app = Flask(__name__)
 
