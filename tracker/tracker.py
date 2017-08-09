@@ -1,14 +1,18 @@
 #!/usr/bin/python3 
 from datetime import timedelta, datetime
-try:
-    import psutil
-except ModuleNotFoundError:
-    pass
-from models import *
+import psutil
+from peewee import *
 from time import sleep
-import config
-from Decorators import async
-db = SqliteDatabase("temp_track.db")
+from tracker import config
+
+
+class Entry(Model):
+    name = CharField()
+    time = DateTimeField()
+    value = FloatField()
+
+    class Meta:
+        database = config.DB
 
 
 # @async
@@ -31,27 +35,26 @@ def main():
         pass
     Entry(time=now, name="CPU", value=psutil.cpu_percent(None)).save()
     Entry(time=now, name="RAM", value=psutil.virtual_memory()[2]).save()
-    print("Main finished")
 
 
 # @async
 def clean_db():
-    now = datetime.datetime.utcnow()
+    now = datetime.utcnow()
     for i in Entry.select():
-        if now-timedelta(hours=config.BACK_LOG) < datetime.datetime.strptime(str(i.time), "%Y-%m-%d %H:%M:%S.%f"):
+        if now-timedelta(hours=config.BACK_LOG) < datetime.strptime(str(i.time), "%Y-%m-%d %H:%M:%S.%f"):
             i.delete_instance()
 
 
-def run():
+def run(sleep_time):
     psutil.cpu_percent(interval=None)
     while True:
         main()
         clean_db()
-        sleep(config.QUERY_TIME)
+        sleep(sleep_time)
 
 
 if __name__ == "__main__":
-    run()
+    run(config.QUERY_TIME)
 
 
 

@@ -1,10 +1,10 @@
-from flask import Flask, render_template
-import pygal
-from peewee import *
-from playhouse.shortcuts import model_to_dict
-from config import DEBUG
-from models import Entry
 from datetime import datetime
+import pygal
+from flask import Flask, render_template
+from playhouse.shortcuts import model_to_dict
+from tracker.config import DEBUG
+from tracker.tracker import Entry
+
 app = Flask(__name__)
 
 
@@ -13,12 +13,14 @@ def index():
     style = "height = 100"
     data = []
     chart = []
+    time = []
     for i, c in enumerate(Entry.select().where(Entry.name == "CPU")):
-        block = (float(c.value), i, i+1)
-        data.append(block)
-
+        data.append(c.value)
+        time.append(datetime.strftime(c.time, "%Y-%m-%d %H:%M:%S.%f"))
     hist = pygal.Line(x_label_orientation=60, height=200)
     hist.add('Wide bars', data)  # value, start point ,end point
+    hist.x_labels = time
+
     hist = hist.render_data_uri()
     chart.append(hist)
     # this is totally DRY !
@@ -29,17 +31,22 @@ def index():
             time.append(datetime.strftime(c.time, "%Y-%m-%d %H:%M:%S.%f"))
     hist = pygal.Line(x_label_orientation=60, height=200)
     hist.add('Ram usage', data)  # value, start point ,end point
+    hist.x_labels = time
     hist = hist.render_data_uri()
     chart.append(hist)
-    for i, c in enumerate(Entry.select().where(Entry.name == "TEMPERATURE")):
-            data.append(c.value)
-            time.append(datetime.strftime(c.time, "%Y-%m-%d %H:%M:%S.%f"))
+    # this is totally DRY !
+    data = []
+    time = []
+    for i in Entry.select().where(Entry.name == "TEMPERATURE"):
+            data.append(i.value)
+            time.append(datetime.strftime(i.time, "%Y-%m-%d %H:%M:%S.%f"))
+
     hist = pygal.Line(x_label_orientation=60, height=200)
     hist.add('Ram usage', data)  # value, start point ,end point
+    hist.x_labels = time
     hist = hist.render_data_uri()
     chart.append(hist)
-    # print()
-    # print(model_to_dict(Entry.name == "CPU"))
+
     return render_template('graphs.html', charts=chart)
     # return hist.render_response()
 

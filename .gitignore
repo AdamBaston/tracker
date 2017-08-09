@@ -138,3 +138,14 @@ ENV/
 
 # Rope project settings
 .ropeproject
+# ignore the database because its big, ish
+.db
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/tracker.iml
+.idea/vcs.xml
+Bar_chart.svg
+Entry_design.py
+config
+line_chart.svg
