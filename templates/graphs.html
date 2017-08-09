@@ -1,0 +1,6 @@
+<!-- Don't forget the "|safe"! -->
+{% for chart in charts %}
+    <div id="chart"style="height: 500px">
+       <embed type="image/svg+xml" src= {{ chart|safe }} />
+    </div>
+{% endfor %}
