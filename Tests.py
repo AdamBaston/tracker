@@ -50,7 +50,7 @@ class Testui(unittest.TestCase):
         value = web_ui.cpu_api()
         print(value,"==")
         print(test_data)
-        self.assertTrue(str(test_data.strip("[]")) is value)
+        self.assertTrue(str(test_data).strip("[]") is value)
 
 
 if __name__ == '__main__':
