@@ -39,18 +39,18 @@ class Testui(unittest.TestCase):
 
     def testApi(self): # should pass on travis
         now = datetime.utcnow()
-        data1 = tracker.Entry(id=1,time=now, name="CPU",value=2.5)
-        data2 =tracker.Entry(id=2,time=now, name="CPU", value=3)
+        data1 = tracker.Entry(time=now, name="CPU", value=2.5).save()
+        data2 = tracker.Entry(time=now, name="CPU", value=3).save()
         test_data = []
         # test_data = model_to_dict(data1)+","+model_to_dict(data2)
-        test_data.append(model_to_dict(data1))
-        test_data.append(model_to_dict(data2))
-        data1.save()
-        data2.save()
+        for i in tracker.Entry.select().where(tracker.Entry.name == "CPU"):
+            test_data.append(model_to_dict(i))
+        # data1.save()
+        # data2.save()
         value = web_ui.cpu_api()
         print(value,"==")
         print(test_data)
-        self.assertTrue(str(test_data).strip("[]") is value)
+        self.assertTrue(str(test_data).strip("[]") == value)
 
 
 if __name__ == '__main__':
