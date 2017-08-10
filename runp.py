@@ -1,2 +1,2 @@
-from web_ui import app
-app.run(debug=False)
+from subprocess import call
+call("python3 web_ui.py & python3 tracker.py")
