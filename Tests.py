@@ -45,9 +45,9 @@ class Testui(unittest.TestCase):
         # test_data = model_to_dict(data1)+","+model_to_dict(data2)
         test_data.append(model_to_dict(data1))
         test_data.append(model_to_dict(data2))
-        print(test_data)
         value = web_ui.cpu_api()
-        print(value,"==", test_data)
+        print(value,"==")
+        print(test_data)
         self.assertTrue(test_data is value)
 
 
