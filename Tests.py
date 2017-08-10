@@ -2,12 +2,13 @@ import unittest
 from datetime import datetime, timedelta
 from difflib import SequenceMatcher as SM
 from peewee import *
-from psutil import cpu_percent
+from psutil import cpu_percent, virtual_memory
 import config
 import tracker
+import web_ui
+from playhouse.shortcuts import model_to_dict
 
-
-class Testcase(unittest.TestCase):
+class Testui(unittest.TestCase):
     def setUp(self):
         config.DB = SqliteDatabase("test_track.db")
         config.QUERY_TIME = 30
@@ -31,12 +32,23 @@ class Testcase(unittest.TestCase):
         tracker.main()
         tracker.main()
         assert tracker.Entry.select().where(tracker.Entry.value)
-        q = tracker.Entry.select().order_by(tracker.Entry.id.desc()).where(tracker.Entry.name == "CPU").get()
-        print(q.value,cpu_percent(interval=1))
-        assert SM(None,str(q.value),str(cpu_percent(interval=1))).ratio() > 0.1
+        q = tracker.Entry.select().order_by(tracker.Entry.id.desc()).where(tracker.Entry.name == "RAM").get()
         # self.assertAlmostEqual(q.value,cpu_percent(interval=1))
         # self.assert(SM(None,q.value,cpu_percent(interval=1)).ratio() > 0.1)
-        self.assertGreaterEqual(SM(None, str(12.5), str(cpu_percent(interval=1))).ratio(), 0.1)
+        self.assertGreaterEqual(SM(None, str(q.value), str(virtual_memory()[2])).ratio(), 0.1)
+
+    def testApi(self): # should pass on travis 
+        now = datetime.utcnow()
+        data1 = tracker.Entry(time=now, name="CPU",value=2.5)
+        data2 =tracker.Entry(time=now, name="CPU", value=3)
+        test_data = []
+        # test_data = model_to_dict(data1)+","+model_to_dict(data2)
+        test_data.append(model_to_dict(data1))
+        test_data.append(model_to_dict(data2))
+        print(test_data)
+        value = web_ui.cpu_api()
+        print(value,"==", test_data)
+        self.assertTrue(test_data == value)
 
 
 if __name__ == '__main__':
