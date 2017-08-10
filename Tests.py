@@ -27,17 +27,6 @@ class Testcase(unittest.TestCase):
         self.assertFalse(tracker.Entry.select().where(tracker.Entry.name == "old_entry_1"), msg="Entry not there")
         self.assertTrue(tracker.Entry.select().where(tracker.Entry.name == "allowed_entry"), msg="Entry there")
 
-
-class Testcase2(unittest.TestCase):
-    def setUp(self):
-        config.DB = SqliteDatabase("test_track.db")
-        config.QUERY_TIME = 30
-        config.DB.create_table(tracker.Entry, safe=True)
-
-    def tearDown(self):
-        for i in tracker.Entry.select():
-            i.delete_instance()
-
     def testmain(self):
         tracker.main()
         tracker.main()
@@ -48,6 +37,7 @@ class Testcase2(unittest.TestCase):
         # self.assertAlmostEqual(q.value,cpu_percent(interval=1))
         # self.assert(SM(None,q.value,cpu_percent(interval=1)).ratio() > 0.1)
         self.assertGreaterEqual(SM(None, str(12.5), str(cpu_percent(interval=1))).ratio(), 0.1)
+
 
 if __name__ == '__main__':
     unittest.main()
