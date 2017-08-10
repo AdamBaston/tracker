@@ -39,8 +39,8 @@ class Testui(unittest.TestCase):
 
     def testApi(self): # should pass on travis
         now = datetime.utcnow()
-        data1 = tracker.Entry(time=now, name="CPU",value=2.5)
-        data2 =tracker.Entry(time=now, name="CPU", value=3)
+        data1 = tracker.Entry(id=1,time=now, name="CPU",value=2.5)
+        data2 =tracker.Entry(id=2,time=now, name="CPU", value=3)
         test_data = []
         # test_data = model_to_dict(data1)+","+model_to_dict(data2)
         test_data.append(model_to_dict(data1))
