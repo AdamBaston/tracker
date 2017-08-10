@@ -11,8 +11,8 @@ class Testcase(unittest.TestCase):
     def setUp(self):
         config.DB = SqliteDatabase("test_track.db")
         config.QUERY_TIME = 30
-        config.DB.create_table(tracker.Entry, safe=True)
-
+        config.DB.create_tables(tracker.Entry, safe=True)
+        config.DB.create_tables(tracker.Entry,safe=True)
     # def tearDown(self):
     #     for i in tracker.Entry.select():
     #         i.delete_instance()
