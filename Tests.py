@@ -37,7 +37,7 @@ class Testui(unittest.TestCase):
         # self.assert(SM(None,q.value,cpu_percent(interval=1)).ratio() > 0.1)
         self.assertGreaterEqual(SM(None, str(q.value), str(virtual_memory()[2])).ratio(), 0.1)
 
-    def testApi(self): # should pass on travis 
+    def testApi(self): # should pass on travis
         now = datetime.utcnow()
         data1 = tracker.Entry(time=now, name="CPU",value=2.5)
         data2 =tracker.Entry(time=now, name="CPU", value=3)
@@ -48,7 +48,7 @@ class Testui(unittest.TestCase):
         print(test_data)
         value = web_ui.cpu_api()
         print(value,"==", test_data)
-        self.assertTrue(test_data == value)
+        self.assertTrue(test_data is value)
 
 
 if __name__ == '__main__':
