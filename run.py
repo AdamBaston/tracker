@@ -1,2 +1,3 @@
-from tracker import tracker
+import tracker
+
 tracker.run()

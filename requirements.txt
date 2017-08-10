@@ -1,8 +1,6 @@
 tracker
-click==6.7
 Flask==0.12.2
 Jinja2==2.9.6
-lxml==3.8.0
 MarkupSafe==1.0
 peewee==2.10.1
 psutil==5.2.2
