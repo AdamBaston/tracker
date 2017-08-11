@@ -35,11 +35,20 @@ def main():
         Entry(time=now, name="TEMPERATURE", value=value).save()
     except FileNotFoundError:
         pass
-    Entry(time=now, name="CPU", value=psutil.cpu_percent(None)).save()
+    # Entry(time=now, name="CPU", value=psutil.cpu_percent(None)).save()
+    cpu_per = psutil.cpu_percent(percpu=True,interval=None)
+    for i, c in enumerate(cpu_per):
+        Entry(time=now,name="CPU{}".format(i), value=c).save()
     Entry(time=now, name="RAM", value=psutil.virtual_memory()[2]).save()
-
-
+    # Entry(time=now, name="Net_Errors", value=psutil.net_io_counters()).save()  # errors
+    Entry(time=now, name="Net_Sent", value=psutil.net_io_counters()[2]).save()   # Packets sent
+    Entry(time=now, name="Net_Recv", value=psutil.net_io_counters()[3]).save()  # Packets recv
+    Entry(time=now, name="Net_Errin", value=psutil.net_io_counters()[4]).save()  # errors
+    Entry(time=now, name="Net_Errout", value=psutil.net_io_counters()[5]).save()   # Packets sent
+    Entry(time=now, name="Net_Dropin", value=psutil.net_io_counters()[6]).save()  # Packets recv
+    Entry(time=now, name="Net_Dropout", value=psutil.net_io_counters()[7]).save()
 # @async
+
 def clean_db():
     now = datetime.utcnow()
     for i in Entry.select():

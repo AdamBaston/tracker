@@ -8,6 +8,7 @@ import tracker
 import web_ui
 from playhouse.shortcuts import model_to_dict
 
+
 class Testui(unittest.TestCase):
     def setUp(self):
         config.DB = SqliteDatabase("test_track.db")
