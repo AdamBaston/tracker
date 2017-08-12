@@ -32,26 +32,25 @@ class Testui(unittest.TestCase):
     def testmain(self):
         tracker.main()
         tracker.main()
-        assert tracker.Entry.select().where(tracker.Entry.value)
         q = tracker.Entry.select().order_by(tracker.Entry.id.desc()).where(tracker.Entry.name == "RAM").get()
         # self.assertAlmostEqual(q.value,cpu_percent(interval=1))
         # self.assert(SM(None,q.value,cpu_percent(interval=1)).ratio() > 0.1)
-        self.assertGreaterEqual(SM(None, str(q.value), str(virtual_memory()[2])).ratio(), 0.1)
+        self.assertGreaterEqual(SM(None, str(q.value), str(virtual_memory()[2])).ratio(), 0.1,msg="Main has passed")
 
     def testApi(self): # should pass on travis
         now = datetime.utcnow()
-        data1 = tracker.Entry(time=now, name="CPU", value=2.5).save()
-        data2 = tracker.Entry(time=now, name="CPU", value=3).save()
+        data1 = tracker.Entry(time=now, name="CPU0", value=2.5).save()
+        data2 = tracker.Entry(time=now, name="CPU0", value=3).save()
         test_data = []
         # test_data = model_to_dict(data1)+","+model_to_dict(data2)
-        for i in tracker.Entry.select().where(tracker.Entry.name == "CPU"):
+        for i in tracker.Entry.select().where(tracker.Entry.name == "CPU0"):
             test_data.append(model_to_dict(i))
         # data1.save()
         # data2.save()
-        value = web_ui.cpu_api()
+        value = web_ui.any_api("CPU0")
         print(value,"==")
         print(test_data)
-        self.assertTrue(str(test_data).strip("[]") == value)
+        self.assertTrue(str(test_data).strip("[]") == value, msg="API passed")
 
 
 if __name__ == '__main__':
