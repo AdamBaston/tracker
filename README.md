@@ -8,7 +8,7 @@ Includes its own API for some reason
 How to run: `python3 runp.py`  
 Then go to `localhost:5000` for graphs
 
-##API
+## API
 Api is on `/api/v1/<name>`  
 it returns Peewee Generated json objects separated by commas
  
