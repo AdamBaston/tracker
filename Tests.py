@@ -5,7 +5,7 @@ from peewee import *
 from psutil import cpu_percent, virtual_memory
 import config
 import tracker
-import web_ui
+from app import views
 from playhouse.shortcuts import model_to_dict
 
 
@@ -45,11 +45,7 @@ class Testui(unittest.TestCase):
         # test_data = model_to_dict(data1)+","+model_to_dict(data2)
         for i in tracker.Entry.select().where(tracker.Entry.name == "CPU0"):
             test_data.append(model_to_dict(i))
-        # data1.save()
-        # data2.save()
-        value = web_ui.any_api("CPU0")
-        print(value,"==")
-        print(test_data)
+        value = views.any_api("CPU0")
         self.assertTrue(str(test_data).strip("[]") == value, msg="API passed")
 
 
